@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Calculator - Financify | Calculate Your Monthly Payment</title>
+    <meta name="description" content="Use Financify's free mortgage calculator to estimate your monthly payments, total interest, and affordability. Get accurate calculations for your home loan.">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../public/logo.png" alt="Financify Logo" class="logo">
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="services.html" class="nav-link">Our Services</a>
+                <a href="calculator.html" class="nav-link active">Calculator</a>
+                <a href="faq.html" class="nav-link">FAQs</a>
+                <a href="career.html" class="nav-link">Career</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero calculator-hero">
+        <div class="container">
+            <div class="page-hero-content">
+                <h1>Mortgage Calculator</h1>
+                <p>Calculate your monthly payment and see how much home you can afford</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator-section">
+        <div class="container">
+            <div class="calculator-container">
+                <div class="calculator-form">
+                    <h2>Loan Details</h2>
+                    <form id="calculator-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="home-price">Home Price</label>
+                                <input type="number" id="home-price" class="form-input" placeholder="500000" value="500000">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="down-payment">Down Payment</label>
+                                <input type="number" id="down-payment" class="form-input" placeholder="100000" value="100000">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="loan-amount">Loan Amount</label>
+                                <input type="number" id="loan-amount" class="form-input" placeholder="400000" value="400000" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="interest-rate">Interest Rate (%)</label>
+                                <input type="number" id="interest-rate" class="form-input" step="0.01" placeholder="3.25" value="3.25">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="loan-term">Loan Term (Years)</label>
+                                <select id="loan-term" class="form-select">
+                                    <option value="15">15 Years</option>
+                                    <option value="20">20 Years</option>
+                                    <option value="25">25 Years</option>
+                                    <option value="30" selected>30 Years</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="property-tax">Annual Property Tax</label>
+                                <input type="number" id="property-tax" class="form-input" placeholder="6000" value="6000">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="home-insurance">Annual Home Insurance</label>
+                                <input type="number" id="home-insurance" class="form-input" placeholder="1200" value="1200">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="pmi">PMI (Monthly)</label>
+                                <input type="number" id="pmi" class="form-input" placeholder="200" value="200">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="hoa-fees">HOA Fees (Monthly)</label>
+                            <input type="number" id="hoa-fees" class="form-input" placeholder="0" value="0">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-large">Calculate Payment</button>
+                    </form>
+                </div>
+                
+                <div class="calculator-results" id="results">
+                    <h2>Monthly Payment Breakdown</h2>
+                    <div class="results-summary">
+                        <div class="result-item primary">
+                            <div class="result-label">Total Monthly Payment</div>
+                            <div class="result-value" id="total-monthly-payment">$0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Principal & Interest</span>
+                            <span class="breakdown-value" id="principal-interest">$0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Property Tax</span>
+                            <span class="breakdown-value" id="monthly-property-tax">$0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Home Insurance</span>
+                            <span class="breakdown-value" id="monthly-insurance">$0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">PMI</span>
+                            <span class="breakdown-value" id="monthly-pmi">$0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">HOA Fees</span>
+                            <span class="breakdown-value" id="monthly-hoa">$0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="loan-summary">
+                        <h3>Loan Summary</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-label">Total Interest Paid</div>
+                                <div class="summary-value" id="total-interest">$0</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Total Amount Paid</div>
+                                <div class="summary-value" id="total-payment">$0</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Payoff Date</div>
+                                <div class="summary-value" id="payoff-date">--</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Down Payment %</div>
+                                <div class="summary-value" id="down-payment-percent">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>Payment Breakdown Chart</h3>
+                        <canvas id="payment-chart" width="600" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Affordability Calculator -->
+    <section class="affordability-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>How Much Home Can You Afford?</h2>
+                <p>Based on your income and expenses, here's what you might qualify for</p>
+            </div>
+            
+            <div class="affordability-calculator">
+                <div class="affordability-form">
+                    <h3>Your Financial Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="annual-income">Annual Gross Income</label>
+                            <input type="number" id="annual-income" class="form-input" placeholder="80000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="monthly-debts">Monthly Debt Payments</label>
+                            <input type="number" id="monthly-debts" class="form-input" placeholder="500">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="available-down-payment">Available Down Payment</label>
+                            <input type="number" id="available-down-payment" class="form-input" placeholder="50000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="affordability-rate">Interest Rate (%)</label>
+                            <input type="number" id="affordability-rate" class="form-input" step="0.01" placeholder="3.25" value="3.25">
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="calculate-affordability" class="btn btn-secondary">Calculate Affordability</button>
+                </div>
+                
+                <div class="affordability-results" id="affordability-results" style="display: none;">
+                    <h3>You Can Afford</h3>
+                    <div class="affordability-summary">
+                        <div class="afford-item">
+                            <div class="afford-label">Maximum Home Price</div>
+                            <div class="afford-value" id="max-home-price">$0</div>
+                        </div>
+                        <div class="afford-item">
+                            <div class="afford-label">Maximum Loan Amount</div>
+                            <div class="afford-value" id="max-loan-amount">$0</div>
+                        </div>
+                        <div class="afford-item">
+                            <div class="afford-label">Estimated Monthly Payment</div>
+                            <div class="afford-value" id="estimated-payment">$0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="debt-ratio-info">
+                        <h4>Debt-to-Income Ratios</h4>
+                        <div class="ratio-item">
+                            <span>Front-end ratio (housing costs):</span>
+                            <span id="front-end-ratio">0%</span>
+                        </div>
+                        <div class="ratio-item">
+                            <span>Back-end ratio (total debt):</span>
+                            <span id="back-end-ratio">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Tool -->
+    <section class="comparison-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Compare Loan Options</h2>
+                <p>See how different loan terms affect your monthly payment and total cost</p>
+            </div>
+            
+            <div class="comparison-tool">
+                <div class="comparison-inputs">
+                    <div class="form-group">
+                        <label class="form-label" for="comparison-loan-amount">Loan Amount</label>
+                        <input type="number" id="comparison-loan-amount" class="form-input" placeholder="400000" value="400000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="comparison-rate">Interest Rate (%)</label>
+                        <input type="number" id="comparison-rate" class="form-input" step="0.01" placeholder="3.25" value="3.25">
+                    </div>
+                    <button type="button" id="update-comparison" class="btn btn-outline">Update Comparison</button>
+                </div>
+                
+                <div class="comparison-results">
+                    <div class="comparison-table">
+                        <div class="table-header">
+                            <div class="table-cell">Loan Term</div>
+                            <div class="table-cell">Monthly Payment</div>
+                            <div class="table-cell">Total Interest</div>
+                            <div class="table-cell">Total Cost</div>
+                        </div>
+                        <div class="table-row" id="comparison-15">
+                            <div class="table-cell">15 Years</div>
+                            <div class="table-cell" id="payment-15">$0</div>
+                            <div class="table-cell" id="interest-15">$0</div>
+                            <div class="table-cell" id="total-15">$0</div>
+                        </div>
+                        <div class="table-row" id="comparison-20">
+                            <div class="table-cell">20 Years</div>
+                            <div class="table-cell" id="payment-20">$0</div>
+                            <div class="table-cell" id="interest-20">$0</div>
+                            <div class="table-cell" id="total-20">$0</div>
+                        </div>
+                        <div class="table-row" id="comparison-30">
+                            <div class="table-cell">30 Years</div>
+                            <div class="table-cell" id="payment-30">$0</div>
+                            <div class="table-cell" id="interest-30">$0</div>
+                            <div class="table-cell" id="total-30">$0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tips Section -->
+    <section class="calculator-tips">
+        <div class="container">
+            <div class="section-header">
+                <h2>Calculator Tips & Information</h2>
+                <p>Understanding your mortgage calculations</p>
+            </div>
+            
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Down Payment</h3>
+                    <p>A larger down payment reduces your loan amount and can help you avoid PMI. Conventional loans typically require 3-20% down, while FHA loans may allow as little as 3.5%.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <h3>Interest Rates</h3>
+                    <p>Your interest rate depends on your credit score, down payment, loan term, and current market conditions. Even a small rate difference can significantly impact your monthly payment.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>PMI Insurance</h3>
+                    <p>Private Mortgage Insurance is typically required when your down payment is less than 20%. PMI can usually be removed once you reach 20% equity in your home.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Debt-to-Income Ratio</h3>
+                    <p>Lenders typically prefer a debt-to-income ratio of 43% or less. This includes your new mortgage payment plus all other monthly debt obligations.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Property Taxes</h3>
+                    <p>Property taxes vary by location and are typically 0.5-2% of your home's value annually. These are often collected with your mortgage payment in an escrow account.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="fas fa-umbrella"></i>
+                    </div>
+                    <h3>Home Insurance</h3>
+                    <p>Homeowners insurance is required by lenders and typically costs 0.2-0.5% of your home's value annually. The cost varies by location and coverage level.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Take the Next Step?</h2>
+                <p>Get pre-approved and see exactly what you qualify for with current market rates.</p>
+                <div class="cta-buttons">
+                    <a href="contact.html" class="btn btn-primary btn-large">Get Pre-Approved</a>
+                    <a href="services.html" class="btn btn-secondary btn-large">View Loan Programs</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="/lovable-uploads/01240b73-12a8-4c58-9f3a-5ec7473828de.png" alt="Financify Logo" class="footer-logo">
+                    <p>Simplifying mortgages with competitive rates, expert guidance, and exceptional service.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Our Services</a></li>
+                        <li><a href="calculator.html">Calculator</a></li>
+                        <li><a href="faq.html">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="services.html">Purchase Loans</a></li>
+                        <li><a href="services.html">Refinancing</a></li>
+                        <li><a href="services.html">Jumbo Loans</a></li>
+                        <li><a href="services.html">FHA Loans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@financify.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Financial St, Suite 100</li>
+                        <li><a href="career.html">Careers</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Financify. All rights reserved. | NMLS #123456</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    <div class="floating-buttons">
+        <a href="tel:+15551234567" class="floating-btn call-btn">
+            <i class="fas fa-phone"></i>
+        </a>
+        <a href="https://wa.me/15551234567" class="floating-btn whatsapp-btn" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <script src="../javascript/script.js"></script>
+    <script src="../javascript/calculator.js"></script>
+</body>
+</html>
