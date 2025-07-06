@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,23 +6,34 @@
     <title>Financify - Mortgage Simplified | Home Loans & Financial Services</title>
     <meta name="description" content="Financify simplifies mortgages with competitive rates, expert guidance, and fast approvals. Get your dream home loan today.">
     <link rel="stylesheet" href="./css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Intro Animation -->
+    <div class="intro-overlay" id="intro-overlay">
+        <div class="intro-content">
+            <div class="intro-logo">
+                <span class="intro-text">Financify</span>
+                <div class="intro-underline"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="nav-logo">
                 <img src="./public/logo.png" alt="Financify Logo" class="logo">
+                <span class="logo-text">Financify</span>
             </div>
             <div class="nav-menu" id="nav-menu">
                 <a href="index.html" class="nav-link active">Home</a>
-                <a href="./pages/about.html" class="nav-link">About Us</a>
-                <a href="./pages/services.html" class="nav-link">Our Services</a>
+                <a href="./pages/about.html" class="nav-link">About</a>
+                <a href="./pages/services.html" class="nav-link">Services</a>
                 <a href="./pages/calculator.html" class="nav-link">Calculator</a>
                 <a href="./pages/faq.html" class="nav-link">FAQs</a>
-                <a href="./pages/career.html" class="nav-link">Career</a>
+                <a href="./pages/career.html" class="nav-link">Careers</a>
                 <a href="./pages/contact.html" class="nav-link">Contact</a>
                 <button class="theme-toggle" id="theme-toggle">
                     <i class="fas fa-moon"></i>
@@ -39,34 +49,51 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-background">
+            <div class="hero-gradient"></div>
+        </div>
         <div class="hero-content">
             <div class="hero-text">
-                <h1 class="hero-title">Mortgage <span class="text-gradient">Simplified</span></h1>
-                <p class="hero-subtitle">Get competitive rates, expert guidance, and fast approvals for your dream home. Join thousands of satisfied customers who chose Financify.</p>
+                <h1 class="hero-title">
+                    <span class="title-line">Mortgage</span>
+                    <span class="title-line gradient-text">Simplified</span>
+                </h1>
+                <p class="hero-subtitle">Experience the future of home financing with competitive rates, instant approvals, and personalized guidance every step of the way.</p>
                 <div class="hero-buttons">
-                    <a href="./pages/calculator.html" class="btn btn-primary">Calculate Payment</a>
-                    <a href="./pages/contact.html" class="btn btn-secondary">Get Pre-Approved</a>
+                    <a href="./pages/calculator.html" class="btn btn-primary">
+                        <span>Calculate Payment</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="./pages/contact.html" class="btn btn-secondary">
+                        <span>Get Pre-Approved</span>
+                    </a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
-                        <span class="stat-number">$2.5B+</span>
+                        <span class="stat-number" data-target="2.5">0</span>
+                        <span class="stat-unit">B+</span>
                         <span class="stat-label">Loans Funded</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">15k+</span>
+                        <span class="stat-number" data-target="15">0</span>
+                        <span class="stat-unit">k+</span>
                         <span class="stat-label">Happy Customers</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">4.9★</span>
+                        <span class="stat-number" data-target="4.9">0</span>
+                        <span class="stat-unit">★</span>
                         <span class="stat-label">Customer Rating</span>
                     </div>
                 </div>
             </div>
-            <div class="hero-image">
+            <div class="hero-visual">
                 <div class="hero-card">
                     <div class="card-header">
                         <h3>Your Dream Home Awaits</h3>
-                        <span class="status-badge">Pre-Approved</span>
+                        <span class="status-badge">
+                            <i class="fas fa-check"></i>
+                            Pre-Approved
+                        </span>
                     </div>
                     <div class="loan-details">
                         <div class="detail">
@@ -77,10 +104,16 @@
                             <span class="label">Interest Rate</span>
                             <span class="value">3.25%</span>
                         </div>
-                        <div class="detail">
+                        <div class="detail highlight">
                             <span class="label">Monthly Payment</span>
-                            <span class="value highlight">$1,958</span>
+                            <span class="value">$1,958</span>
                         </div>
+                    </div>
+                    <div class="card-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="progress-text">Application Complete</span>
                     </div>
                 </div>
             </div>
@@ -92,7 +125,7 @@
         <div class="container">
             <div class="section-header">
                 <h2>Why Choose Financify?</h2>
-                <p>We make home buying simple, fast, and transparent</p>
+                <p>Experience the difference with our innovative approach to home financing</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
@@ -100,28 +133,32 @@
                         <i class="fas fa-percentage"></i>
                     </div>
                     <h3>Competitive Rates</h3>
-                    <p>Get the best rates in the market with our extensive lender network and negotiation expertise.</p>
+                    <p>Access the best rates in the market through our extensive lender network and advanced rate matching technology.</p>
+                    <div class="feature-highlight">Starting at 2.99% APR</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-bolt"></i>
                     </div>
-                    <h3>Fast Approval</h3>
-                    <p>Our streamlined process gets you pre-approved in minutes and closed in as little as 15 days.</p>
+                    <h3>Lightning Fast</h3>
+                    <p>Get pre-approved in minutes with our AI-powered application process and close in as little as 15 days.</p>
+                    <div class="feature-highlight">15-day closing</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>Secure & Trusted</h3>
-                    <p>Bank-level security and transparent processes ensure your data and transactions are safe.</p>
+                    <h3>Bank-Level Security</h3>
+                    <p>Your data is protected with 256-bit encryption and multi-factor authentication for complete peace of mind.</p>
+                    <div class="feature-highlight">100% Secure</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-user-tie"></i>
                     </div>
                     <h3>Expert Guidance</h3>
-                    <p>Our certified loan officers guide you through every step with personalized advice.</p>
+                    <p>Work with certified loan officers who provide personalized advice and support throughout your journey.</p>
+                    <div class="feature-highlight">24/7 Support</div>
                 </div>
             </div>
         </div>
@@ -132,41 +169,56 @@
         <div class="container">
             <div class="section-header">
                 <h2>Our Mortgage Solutions</h2>
-                <p>Tailored loan programs for every homebuyer</p>
+                <p>Tailored financing options for every homebuyer's unique needs</p>
             </div>
             <div class="services-grid">
                 <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
                     <h3>Purchase Loans</h3>
                     <p>First-time buyer or moving up? We have the perfect loan program for your new home purchase.</p>
                     <ul>
-                        <li>Conventional Loans</li>
-                        <li>FHA Loans</li>
-                        <li>VA Loans</li>
-                        <li>USDA Loans</li>
+                        <li><i class="fas fa-check"></i>Conventional Loans</li>
+                        <li><i class="fas fa-check"></i>FHA Loans</li>
+                        <li><i class="fas fa-check"></i>VA Loans</li>
+                        <li><i class="fas fa-check"></i>USDA Loans</li>
                     </ul>
-                    <a href="./pages/services.html" class="btn btn-outline">Learn More</a>
+                    <a href="./pages/services.html" class="service-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
                 <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
                     <h3>Refinancing</h3>
                     <p>Lower your monthly payments or access your home's equity with our refinancing options.</p>
                     <ul>
-                        <li>Rate & Term Refinance</li>
-                        <li>Cash-Out Refinance</li>
-                        <li>FHA Streamline</li>
-                        <li>VA IRRRL</li>
+                        <li><i class="fas fa-check"></i>Rate & Term Refinance</li>
+                        <li><i class="fas fa-check"></i>Cash-Out Refinance</li>
+                        <li><i class="fas fa-check"></i>FHA Streamline</li>
+                        <li><i class="fas fa-check"></i>VA IRRRL</li>
                     </ul>
-                    <a href="./pages/services.html" class="btn btn-outline">Learn More</a>
+                    <a href="./pages/services.html" class="service-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
                 <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
                     <h3>Jumbo Loans</h3>
                     <p>Financing for luxury homes and high-value properties with competitive jumbo loan rates.</p>
                     <ul>
-                        <li>Up to $3M+ Loan Amounts</li>
-                        <li>Competitive Rates</li>
-                        <li>Flexible Terms</li>
-                        <li>Fast Processing</li>
+                        <li><i class="fas fa-check"></i>Up to $3M+ Loan Amounts</li>
+                        <li><i class="fas fa-check"></i>Competitive Rates</li>
+                        <li><i class="fas fa-check"></i>Flexible Terms</li>
+                        <li><i class="fas fa-check"></i>Fast Processing</li>
                     </ul>
-                    <a href="./pages/services.html" class="btn btn-outline">Learn More</a>
+                    <a href="./pages/services.html" class="service-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -176,9 +228,32 @@
     <section class="calculator-cta">
         <div class="container">
             <div class="cta-content">
-                <h2>Calculate Your Monthly Payment</h2>
-                <p>Use our advanced mortgage calculator to estimate your monthly payments and see how much home you can afford.</p>
-                <a href="/pages/calculator.html" class="btn btn-primary btn-large">Try Calculator</a>
+                <div class="cta-text">
+                    <h2>Calculate Your Monthly Payment</h2>
+                    <p>Use our advanced mortgage calculator to estimate your monthly payments and see how much home you can afford with real-time rates.</p>
+                    <a href="./pages/calculator.html" class="btn btn-primary btn-large">
+                        <span>Try Calculator</span>
+                        <i class="fas fa-calculator"></i>
+                    </a>
+                </div>
+                <div class="cta-visual">
+                    <div class="calculator-preview">
+                        <div class="calc-display">
+                            <div class="calc-row">
+                                <span>Home Price</span>
+                                <span>$500,000</span>
+                            </div>
+                            <div class="calc-row">
+                                <span>Down Payment</span>
+                                <span>$100,000</span>
+                            </div>
+                            <div class="calc-row highlight">
+                                <span>Monthly Payment</span>
+                                <span>$1,958</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -188,13 +263,24 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <img src="/public/logo.png" alt="Financify Logo" class="footer-logo">
-                    <p>Simplifying mortgages with competitive rates, expert guidance, and exceptional service.</p>
+                    <div class="footer-brand">
+                        <img src="./public/logo.png" alt="Financify Logo" class="footer-logo">
+                        <span class="footer-logo-text">Financify</span>
+                    </div>
+                    <p>Simplifying mortgages with competitive rates, expert guidance, and exceptional service for the modern homebuyer.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -231,14 +317,25 @@
         </div>
     </footer>
 
-    <!-- Floating Buttons -->
-    <div class="floating-buttons">
-        <a href="tel:+15551234567" class="floating-btn call-btn">
-            <i class="fas fa-phone"></i>
-        </a>
-        <a href="https://wa.me/15551234567" class="floating-btn whatsapp-btn" target="_blank">
-            <i class="fab fa-whatsapp"></i>
-        </a>
+    <!-- Floating Action Button -->
+    <div class="floating-actions">
+        <button class="fab-main" id="fab-main">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div class="fab-menu" id="fab-menu">
+            <a href="tel:+15551234567" class="fab-item">
+                <i class="fas fa-phone"></i>
+                <span class="fab-tooltip">Call Us</span>
+            </a>
+            <a href="https://wa.me/15551234567" class="fab-item" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span class="fab-tooltip">WhatsApp</span>
+            </a>
+            <a href="./pages/calculator.html" class="fab-item">
+                <i class="fas fa-calculator"></i>
+                <span class="fab-tooltip">Calculator</span>
+            </a>
+        </div>
     </div>
 
     <script src="./javascript/script.js"></script>

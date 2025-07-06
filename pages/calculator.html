@@ -1,29 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mortgage Calculator - Financify | Calculate Your Monthly Payment</title>
-    <meta name="description" content="Use Financify's free mortgage calculator to estimate your monthly payments, total interest, and affordability. Get accurate calculations for your home loan.">
+    <meta name="description" content="Use Financify's advanced mortgage calculator to estimate your monthly payments, total interest, and affordability. Get accurate calculations for your home loan.">
     <link rel="stylesheet" href="../css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/calculator.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="nav-logo">
                 <img src="../public/logo.png" alt="Financify Logo" class="logo">
+                <span class="logo-text">Financify</span>
             </div>
             <div class="nav-menu" id="nav-menu">
                 <a href="../index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link">About Us</a>
-                <a href="services.html" class="nav-link">Our Services</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="services.html" class="nav-link">Services</a>
                 <a href="calculator.html" class="nav-link active">Calculator</a>
                 <a href="faq.html" class="nav-link">FAQs</a>
-                <a href="career.html" class="nav-link">Career</a>
+                <a href="career.html" class="nav-link">Careers</a>
                 <a href="contact.html" class="nav-link">Contact</a>
                 <button class="theme-toggle" id="theme-toggle">
                     <i class="fas fa-moon"></i>
@@ -42,7 +44,7 @@
         <div class="container">
             <div class="page-hero-content">
                 <h1>Mortgage Calculator</h1>
-                <p>Calculate your monthly payment and see how much home you can afford</p>
+                <p>Calculate your monthly payment and discover how much home you can afford with our advanced mortgage calculator</p>
             </div>
         </div>
     </section>
@@ -52,33 +54,65 @@
         <div class="container">
             <div class="calculator-container">
                 <div class="calculator-form">
-                    <h2>Loan Details</h2>
+                    <div class="form-header">
+                        <h2>Loan Details</h2>
+                        <p>Enter your loan information to calculate your monthly payment</p>
+                    </div>
+                    
                     <form id="calculator-form">
-                        <div class="form-row">
+                        <div class="form-grid">
                             <div class="form-group">
-                                <label class="form-label" for="home-price">Home Price</label>
-                                <input type="number" id="home-price" class="form-input" placeholder="500000" value="500000">
+                                <label class="form-label" for="home-price">
+                                    <i class="fas fa-home"></i>
+                                    Home Price
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-prefix">$</span>
+                                    <input type="number" id="home-price" class="form-input" placeholder="500,000" value="500000" min="0" step="1000">
+                                </div>
                             </div>
+                            
                             <div class="form-group">
-                                <label class="form-label" for="down-payment">Down Payment</label>
-                                <input type="number" id="down-payment" class="form-input" placeholder="100000" value="100000">
+                                <label class="form-label" for="down-payment">
+                                    <i class="fas fa-piggy-bank"></i>
+                                    Down Payment
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-prefix">$</span>
+                                    <input type="number" id="down-payment" class="form-input" placeholder="100,000" value="100000" min="0" step="1000">
+                                </div>
+                                <div class="down-payment-percentage">
+                                    <span id="down-payment-percent">20%</span> of home price
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="form-row">
+                            
                             <div class="form-group">
-                                <label class="form-label" for="loan-amount">Loan Amount</label>
-                                <input type="number" id="loan-amount" class="form-input" placeholder="400000" value="400000" readonly>
+                                <label class="form-label" for="loan-amount">
+                                    <i class="fas fa-calculator"></i>
+                                    Loan Amount
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-prefix">$</span>
+                                    <input type="number" id="loan-amount" class="form-input" placeholder="400,000" value="400000" readonly>
+                                </div>
                             </div>
+                            
                             <div class="form-group">
-                                <label class="form-label" for="interest-rate">Interest Rate (%)</label>
-                                <input type="number" id="interest-rate" class="form-input" step="0.01" placeholder="3.25" value="3.25">
+                                <label class="form-label" for="interest-rate">
+                                    <i class="fas fa-percentage"></i>
+                                    Interest Rate
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="interest-rate" class="form-input" step="0.01" placeholder="3.25" value="3.25" min="0" max="20">
+                                    <span class="input-suffix">%</span>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="form-row">
+                            
                             <div class="form-group">
-                                <label class="form-label" for="loan-term">Loan Term (Years)</label>
+                                <label class="form-label" for="loan-term">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Loan Term
+                                </label>
                                 <select id="loan-term" class="form-select">
                                     <option value="15">15 Years</option>
                                     <option value="20">20 Years</option>
@@ -86,61 +120,134 @@
                                     <option value="30" selected>30 Years</option>
                                 </select>
                             </div>
+                            
                             <div class="form-group">
-                                <label class="form-label" for="property-tax">Annual Property Tax</label>
-                                <input type="number" id="property-tax" class="form-input" placeholder="6000" value="6000">
+                                <label class="form-label" for="property-tax">
+                                    <i class="fas fa-building"></i>
+                                    Annual Property Tax
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-prefix">$</span>
+                                    <input type="number" id="property-tax" class="form-input" placeholder="6,000" value="6000" min="0" step="100">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="home-insurance">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Annual Home Insurance
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-prefix">$</span>
+                                    <input type="number" id="home-insurance" class="form-input" placeholder="1,200" value="1200" min="0" step="100">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="pmi">
+                                    <i class="fas fa-umbrella"></i>
+                                    PMI (Monthly)
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-prefix">$</span>
+                                    <input type="number" id="pmi" class="form-input" placeholder="200" value="200" min="0" step="10">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="hoa-fees">
+                                    <i class="fas fa-users"></i>
+                                    HOA Fees (Monthly)
+                                </label>
+                                <div class="input-wrapper">
+                                    <span class="input-prefix">$</span>
+                                    <input type="number" id="hoa-fees" class="form-input" placeholder="0" value="0" min="0" step="10">
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" for="home-insurance">Annual Home Insurance</label>
-                                <input type="number" id="home-insurance" class="form-input" placeholder="1200" value="1200">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="pmi">PMI (Monthly)</label>
-                                <input type="number" id="pmi" class="form-input" placeholder="200" value="200">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label" for="hoa-fees">HOA Fees (Monthly)</label>
-                            <input type="number" id="hoa-fees" class="form-input" placeholder="0" value="0">
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-large">Calculate Payment</button>
+                        <button type="submit" class="btn btn-primary btn-large calculate-btn">
+                            <i class="fas fa-calculator"></i>
+                            <span>Calculate Payment</span>
+                        </button>
                     </form>
                 </div>
                 
                 <div class="calculator-results" id="results">
-                    <h2>Monthly Payment Breakdown</h2>
+                    <div class="results-header">
+                        <h2>Monthly Payment Breakdown</h2>
+                        <div class="results-actions">
+                            <button class="btn btn-secondary" id="email-report-btn">
+                                <i class="fas fa-envelope"></i>
+                                <span>Email Report</span>
+                            </button>
+                        </div>
+                    </div>
+                    
                     <div class="results-summary">
                         <div class="result-item primary">
-                            <div class="result-label">Total Monthly Payment</div>
-                            <div class="result-value" id="total-monthly-payment">$0</div>
+                            <div class="result-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="result-content">
+                                <div class="result-label">Total Monthly Payment</div>
+                                <div class="result-value" id="total-monthly-payment">$0</div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="payment-breakdown">
-                        <div class="breakdown-item">
-                            <span class="breakdown-label">Principal & Interest</span>
-                            <span class="breakdown-value" id="principal-interest">$0</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-label">Property Tax</span>
-                            <span class="breakdown-value" id="monthly-property-tax">$0</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-label">Home Insurance</span>
-                            <span class="breakdown-value" id="monthly-insurance">$0</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-label">PMI</span>
-                            <span class="breakdown-value" id="monthly-pmi">$0</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-label">HOA Fees</span>
-                            <span class="breakdown-value" id="monthly-hoa">$0</span>
+                        <h3>Payment Breakdown</h3>
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="breakdown-content">
+                                    <span class="breakdown-label">Principal & Interest</span>
+                                    <span class="breakdown-value" id="principal-interest">$0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-item">
+                                <div class="breakdown-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="breakdown-content">
+                                    <span class="breakdown-label">Property Tax</span>
+                                    <span class="breakdown-value" id="monthly-property-tax">$0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-item">
+                                <div class="breakdown-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="breakdown-content">
+                                    <span class="breakdown-label">Home Insurance</span>
+                                    <span class="breakdown-value" id="monthly-insurance">$0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-item">
+                                <div class="breakdown-icon">
+                                    <i class="fas fa-umbrella"></i>
+                                </div>
+                                <div class="breakdown-content">
+                                    <span class="breakdown-label">PMI</span>
+                                    <span class="breakdown-value" id="monthly-pmi">$0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-item">
+                                <div class="breakdown-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="breakdown-content">
+                                    <span class="breakdown-label">HOA Fees</span>
+                                    <span class="breakdown-value" id="monthly-hoa">$0</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -148,26 +255,49 @@
                         <h3>Loan Summary</h3>
                         <div class="summary-grid">
                             <div class="summary-item">
-                                <div class="summary-label">Total Interest Paid</div>
-                                <div class="summary-value" id="total-interest">$0</div>
+                                <div class="summary-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-label">Total Interest Paid</div>
+                                    <div class="summary-value" id="total-interest">$0</div>
+                                </div>
                             </div>
+                            
                             <div class="summary-item">
-                                <div class="summary-label">Total Amount Paid</div>
-                                <div class="summary-value" id="total-payment">$0</div>
+                                <div class="summary-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-label">Total Amount Paid</div>
+                                    <div class="summary-value" id="total-payment">$0</div>
+                                </div>
                             </div>
+                            
                             <div class="summary-item">
-                                <div class="summary-label">Payoff Date</div>
-                                <div class="summary-value" id="payoff-date">--</div>
+                                <div class="summary-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-label">Payoff Date</div>
+                                    <div class="summary-value" id="payoff-date">--</div>
+                                </div>
                             </div>
+                            
                             <div class="summary-item">
-                                <div class="summary-label">Down Payment %</div>
-                                <div class="summary-value" id="down-payment-percent">0%</div>
+                                <div class="summary-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-label">Down Payment %</div>
+                                    <div class="summary-value" id="down-payment-display">0%</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="chart-container">
-                        <h3>Payment Breakdown Chart</h3>
+                        <h3>Payment Visualization</h3>
                         <canvas id="payment-chart" width="600" height="400"></canvas>
                     </div>
                 </div>
@@ -175,121 +305,152 @@
         </div>
     </section>
 
+    <!-- Email Report Modal -->
+    <div class="modal" id="email-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Email Mortgage Report</h3>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Enter your email address to receive a detailed mortgage calculation report as an Excel file.</p>
+                <form id="email-form">
+                    <div class="form-group">
+                        <label class="form-label" for="email-address">
+                            <i class="fas fa-envelope"></i>
+                            Email Address
+                        </label>
+                        <input type="email" id="email-address" class="form-input" placeholder="your.email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="recipient-name">
+                            <i class="fas fa-user"></i>
+                            Your Name (Optional)
+                        </label>
+                        <input type="text" id="recipient-name" class="form-input" placeholder="John Doe">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-email">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Send Report</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Affordability Calculator -->
     <section class="affordability-section">
         <div class="container">
             <div class="section-header">
                 <h2>How Much Home Can You Afford?</h2>
-                <p>Based on your income and expenses, here's what you might qualify for</p>
+                <p>Based on your income and expenses, discover your home buying power</p>
             </div>
             
             <div class="affordability-calculator">
                 <div class="affordability-form">
                     <h3>Your Financial Information</h3>
-                    <div class="form-row">
+                    <div class="form-grid">
                         <div class="form-group">
-                            <label class="form-label" for="annual-income">Annual Gross Income</label>
-                            <input type="number" id="annual-income" class="form-input" placeholder="80000">
+                            <label class="form-label" for="annual-income">
+                                <i class="fas fa-dollar-sign"></i>
+                                Annual Gross Income
+                            </label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">$</span>
+                                <input type="number" id="annual-income" class="form-input" placeholder="80,000" min="0" step="1000">
+                            </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label class="form-label" for="monthly-debts">Monthly Debt Payments</label>
-                            <input type="number" id="monthly-debts" class="form-input" placeholder="500">
+                            <label class="form-label" for="monthly-debts">
+                                <i class="fas fa-credit-card"></i>
+                                Monthly Debt Payments
+                            </label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">$</span>
+                                <input type="number" id="monthly-debts" class="form-input" placeholder="500" min="0" step="50">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="available-down-payment">
+                                <i class="fas fa-piggy-bank"></i>
+                                Available Down Payment
+                            </label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">$</span>
+                                <input type="number" id="available-down-payment" class="form-input" placeholder="50,000" min="0" step="1000">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="affordability-rate">
+                                <i class="fas fa-percentage"></i>
+                                Interest Rate
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="number" id="affordability-rate" class="form-input" step="0.01" placeholder="3.25" value="3.25" min="0" max="20">
+                                <span class="input-suffix">%</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="available-down-payment">Available Down Payment</label>
-                            <input type="number" id="available-down-payment" class="form-input" placeholder="50000">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="affordability-rate">Interest Rate (%)</label>
-                            <input type="number" id="affordability-rate" class="form-input" step="0.01" placeholder="3.25" value="3.25">
-                        </div>
-                    </div>
-                    
-                    <button type="button" id="calculate-affordability" class="btn btn-secondary">Calculate Affordability</button>
+                    <button type="button" id="calculate-affordability" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        <span>Calculate Affordability</span>
+                    </button>
                 </div>
                 
-                <div class="affordability-results" id="affordability-results" style="display: none;">
+                <div class="affordability-results" id="affordability-results">
                     <h3>You Can Afford</h3>
                     <div class="affordability-summary">
                         <div class="afford-item">
-                            <div class="afford-label">Maximum Home Price</div>
-                            <div class="afford-value" id="max-home-price">$0</div>
+                            <div class="afford-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="afford-content">
+                                <div class="afford-label">Maximum Home Price</div>
+                                <div class="afford-value" id="max-home-price">$0</div>
+                            </div>
                         </div>
+                        
                         <div class="afford-item">
-                            <div class="afford-label">Maximum Loan Amount</div>
-                            <div class="afford-value" id="max-loan-amount">$0</div>
+                            <div class="afford-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="afford-content">
+                                <div class="afford-label">Maximum Loan Amount</div>
+                                <div class="afford-value" id="max-loan-amount">$0</div>
+                            </div>
                         </div>
+                        
                         <div class="afford-item">
-                            <div class="afford-label">Estimated Monthly Payment</div>
-                            <div class="afford-value" id="estimated-payment">$0</div>
+                            <div class="afford-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="afford-content">
+                                <div class="afford-label">Estimated Monthly Payment</div>
+                                <div class="afford-value" id="estimated-payment">$0</div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="debt-ratio-info">
                         <h4>Debt-to-Income Ratios</h4>
-                        <div class="ratio-item">
-                            <span>Front-end ratio (housing costs):</span>
-                            <span id="front-end-ratio">0%</span>
-                        </div>
-                        <div class="ratio-item">
-                            <span>Back-end ratio (total debt):</span>
-                            <span id="back-end-ratio">0%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Comparison Tool -->
-    <section class="comparison-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Compare Loan Options</h2>
-                <p>See how different loan terms affect your monthly payment and total cost</p>
-            </div>
-            
-            <div class="comparison-tool">
-                <div class="comparison-inputs">
-                    <div class="form-group">
-                        <label class="form-label" for="comparison-loan-amount">Loan Amount</label>
-                        <input type="number" id="comparison-loan-amount" class="form-input" placeholder="400000" value="400000">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="comparison-rate">Interest Rate (%)</label>
-                        <input type="number" id="comparison-rate" class="form-input" step="0.01" placeholder="3.25" value="3.25">
-                    </div>
-                    <button type="button" id="update-comparison" class="btn btn-outline">Update Comparison</button>
-                </div>
-                
-                <div class="comparison-results">
-                    <div class="comparison-table">
-                        <div class="table-header">
-                            <div class="table-cell">Loan Term</div>
-                            <div class="table-cell">Monthly Payment</div>
-                            <div class="table-cell">Total Interest</div>
-                            <div class="table-cell">Total Cost</div>
-                        </div>
-                        <div class="table-row" id="comparison-15">
-                            <div class="table-cell">15 Years</div>
-                            <div class="table-cell" id="payment-15">$0</div>
-                            <div class="table-cell" id="interest-15">$0</div>
-                            <div class="table-cell" id="total-15">$0</div>
-                        </div>
-                        <div class="table-row" id="comparison-20">
-                            <div class="table-cell">20 Years</div>
-                            <div class="table-cell" id="payment-20">$0</div>
-                            <div class="table-cell" id="interest-20">$0</div>
-                            <div class="table-cell" id="total-20">$0</div>
-                        </div>
-                        <div class="table-row" id="comparison-30">
-                            <div class="table-cell">30 Years</div>
-                            <div class="table-cell" id="payment-30">$0</div>
-                            <div class="table-cell" id="interest-30">$0</div>
-                            <div class="table-cell" id="total-30">$0</div>
+                        <div class="ratio-grid">
+                            <div class="ratio-item">
+                                <span class="ratio-label">Front-end ratio (housing costs):</span>
+                                <span class="ratio-value" id="front-end-ratio">0%</span>
+                            </div>
+                            <div class="ratio-item">
+                                <span class="ratio-label">Back-end ratio (total debt):</span>
+                                <span class="ratio-value" id="back-end-ratio">0%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -302,13 +463,13 @@
         <div class="container">
             <div class="section-header">
                 <h2>Calculator Tips & Information</h2>
-                <p>Understanding your mortgage calculations</p>
+                <p>Understanding your mortgage calculations for better financial decisions</p>
             </div>
             
             <div class="tips-grid">
                 <div class="tip-card">
                     <div class="tip-icon">
-                        <i class="fas fa-lightbulb"></i>
+                        <i class="fas fa-piggy-bank"></i>
                     </div>
                     <h3>Down Payment</h3>
                     <p>A larger down payment reduces your loan amount and can help you avoid PMI. Conventional loans typically require 3-20% down, while FHA loans may allow as little as 3.5%.</p>
@@ -337,22 +498,6 @@
                     <h3>Debt-to-Income Ratio</h3>
                     <p>Lenders typically prefer a debt-to-income ratio of 43% or less. This includes your new mortgage payment plus all other monthly debt obligations.</p>
                 </div>
-                
-                <div class="tip-card">
-                    <div class="tip-icon">
-                        <i class="fas fa-home"></i>
-                    </div>
-                    <h3>Property Taxes</h3>
-                    <p>Property taxes vary by location and are typically 0.5-2% of your home's value annually. These are often collected with your mortgage payment in an escrow account.</p>
-                </div>
-                
-                <div class="tip-card">
-                    <div class="tip-icon">
-                        <i class="fas fa-umbrella"></i>
-                    </div>
-                    <h3>Home Insurance</h3>
-                    <p>Homeowners insurance is required by lenders and typically costs 0.2-0.5% of your home's value annually. The cost varies by location and coverage level.</p>
-                </div>
             </div>
         </div>
     </section>
@@ -361,11 +506,18 @@
     <section class="cta-section">
         <div class="container">
             <div class="cta-content">
-                <h2>Ready to Take the Next Step?</h2>
-                <p>Get pre-approved and see exactly what you qualify for with current market rates.</p>
-                <div class="cta-buttons">
-                    <a href="contact.html" class="btn btn-primary btn-large">Get Pre-Approved</a>
-                    <a href="services.html" class="btn btn-secondary btn-large">View Loan Programs</a>
+                <div class="cta-text">
+                    <h2>Ready to Take the Next Step?</h2>
+                    <p>Get pre-approved and see exactly what you qualify for with current market rates and personalized guidance from our experts.</p>
+                    <div class="cta-buttons">
+                        <a href="contact.html" class="btn btn-primary btn-large">
+                            <span>Get Pre-Approved</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="services.html" class="btn btn-secondary btn-large">
+                            <span>View Loan Programs</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -376,13 +528,24 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <img src="/lovable-uploads/01240b73-12a8-4c58-9f3a-5ec7473828de.png" alt="Financify Logo" class="footer-logo">
-                    <p>Simplifying mortgages with competitive rates, expert guidance, and exceptional service.</p>
+                    <div class="footer-brand">
+                        <img src="../public/logo.png" alt="Financify Logo" class="footer-logo">
+                        <span class="footer-logo-text">Financify</span>
+                    </div>
+                    <p>Simplifying mortgages with competitive rates, expert guidance, and exceptional service for the modern homebuyer.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -419,14 +582,25 @@
         </div>
     </footer>
 
-    <!-- Floating Buttons -->
-    <div class="floating-buttons">
-        <a href="tel:+15551234567" class="floating-btn call-btn">
-            <i class="fas fa-phone"></i>
-        </a>
-        <a href="https://wa.me/15551234567" class="floating-btn whatsapp-btn" target="_blank">
-            <i class="fab fa-whatsapp"></i>
-        </a>
+    <!-- Floating Action Button -->
+    <div class="floating-actions">
+        <button class="fab-main" id="fab-main">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div class="fab-menu" id="fab-menu">
+            <a href="tel:+15551234567" class="fab-item">
+                <i class="fas fa-phone"></i>
+                <span class="fab-tooltip">Call Us</span>
+            </a>
+            <a href="https://wa.me/15551234567" class="fab-item" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span class="fab-tooltip">WhatsApp</span>
+            </a>
+            <a href="contact.html" class="fab-item">
+                <i class="fas fa-envelope"></i>
+                <span class="fab-tooltip">Contact</span>
+            </a>
+        </div>
     </div>
 
     <script src="../javascript/script.js"></script>

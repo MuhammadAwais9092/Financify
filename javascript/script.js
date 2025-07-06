@@ -1,6 +1,44 @@
+// Modern Financify JavaScript
+
+// DOM Content Loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeIntroAnimation();
+    initializeThemeToggle();
+    initializeMobileNavigation();
+    initializeScrollEffects();
+    initializeAnimations();
+    initializeFloatingActionButton();
+    initializeCounterAnimations();
+    initializeActiveNavigation();
+    initializeFormValidation();
+});
+
+// Intro Animation
+function initializeIntroAnimation() {
+    const introOverlay = document.getElementById('intro-overlay');
+    
+    // Check if user has seen intro before
+    const hasSeenIntro = localStorage.getItem('financify-intro-seen');
+    
+    if (hasSeenIntro) {
+        introOverlay.style.display = 'none';
+        return;
+    }
+    
+    // Show intro animation
+    setTimeout(() => {
+        introOverlay.classList.add('hidden');
+        localStorage.setItem('financify-intro-seen', 'true');
+        
+        // Remove from DOM after animation
+        setTimeout(() => {
+            introOverlay.style.display = 'none';
+        }, 800);
+    }, 2500);
+}
 
 // Theme Toggle Functionality
-document.addEventListener('DOMContentLoaded', function() {
+function initializeThemeToggle() {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const icon = themeToggle.querySelector('i');
@@ -16,9 +54,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentTheme = body.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
+        // Add transition class for smooth theme change
+        body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+        
         body.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         updateThemeIcon(newTheme);
+        
+        // Remove transition after change
+        setTimeout(() => {
+            body.style.transition = '';
+        }, 300);
     });
     
     function updateThemeIcon(theme) {
@@ -28,16 +74,29 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.className = 'fas fa-moon';
         }
     }
-});
+}
 
 // Mobile Navigation Toggle
-document.addEventListener('DOMContentLoaded', function() {
+function initializeMobileNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', function() {
             navMenu.classList.toggle('active');
+            
+            // Animate hamburger menu
+            const bars = navToggle.querySelectorAll('.bar');
+            bars.forEach((bar, index) => {
+                if (navMenu.classList.contains('active')) {
+                    if (index === 0) bar.style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    if (index === 1) bar.style.opacity = '0';
+                    if (index === 2) bar.style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
+                    bar.style.transform = '';
+                    bar.style.opacity = '';
+                }
+            });
         });
         
         // Close menu when clicking on a link
@@ -45,6 +104,12 @@ document.addEventListener('DOMContentLoaded', function() {
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('active');
+                // Reset hamburger menu
+                const bars = navToggle.querySelectorAll('.bar');
+                bars.forEach(bar => {
+                    bar.style.transform = '';
+                    bar.style.opacity = '';
+                });
             });
         });
         
@@ -52,33 +117,126 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('click', function(e) {
             if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
                 navMenu.classList.remove('active');
-            }
-        });
-    }
-});
-
-// Smooth Scrolling for Anchor Links
-document.addEventListener('DOMContentLoaded', function() {
-    const links = document.querySelectorAll('a[href^="#"]');
-    
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth'
+                // Reset hamburger menu
+                const bars = navToggle.querySelectorAll('.bar');
+                bars.forEach(bar => {
+                    bar.style.transform = '';
+                    bar.style.opacity = '';
                 });
             }
         });
+    }
+}
+
+// Scroll Effects
+function initializeScrollEffects() {
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 100) {
+            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            navbar.style.backdropFilter = 'blur(20px)';
+            navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+        } else {
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.backdropFilter = 'blur(20px)';
+            navbar.style.boxShadow = 'none';
+        }
+        
+        // Update for dark theme
+        const theme = document.body.getAttribute('data-theme');
+        if (theme === 'dark') {
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(17, 24, 39, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(17, 24, 39, 0.95)';
+            }
+        }
     });
-});
+}
+
+// Intersection Observer for Animations
+function initializeAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-up');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll('.feature-card, .service-card, .hero-card');
+    animateElements.forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Floating Action Button
+function initializeFloatingActionButton() {
+    const fabMain = document.getElementById('fab-main');
+    const fabMenu = document.getElementById('fab-menu');
+    
+    if (fabMain && fabMenu) {
+        fabMain.addEventListener('click', function() {
+            fabMain.classList.toggle('active');
+            fabMenu.classList.toggle('active');
+        });
+        
+        // Close FAB menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!fabMain.contains(e.target) && !fabMenu.contains(e.target)) {
+                fabMain.classList.remove('active');
+                fabMenu.classList.remove('active');
+            }
+        });
+    }
+}
+
+// Counter Animations
+function initializeCounterAnimations() {
+    const counters = document.querySelectorAll('.stat-number');
+    
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseFloat(counter.getAttribute('data-target'));
+                animateCounter(counter, target);
+                counterObserver.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    counters.forEach(counter => {
+        counterObserver.observe(counter);
+    });
+}
+
+function animateCounter(element, target) {
+    let current = 0;
+    const increment = target / 100;
+    const duration = 2000; // 2 seconds
+    const stepTime = duration / 100;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        element.textContent = current.toFixed(1);
+    }, stepTime);
+}
 
 // Active Navigation Link Highlighting
-document.addEventListener('DOMContentLoaded', function() {
+function initializeActiveNavigation() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('.nav-link');
     
@@ -92,28 +250,22 @@ document.addEventListener('DOMContentLoaded', function() {
             link.classList.add('active');
         }
     });
-});
-
-// Navbar Scroll Effect
-document.addEventListener('DOMContentLoaded', function() {
-    const navbar = document.querySelector('.navbar');
-    
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 100) {
-            navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-            navbar.style.backdropFilter = 'blur(15px)';
-        } else {
-            navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.backdropFilter = 'blur(10px)';
-        }
-    });
-});
+}
 
 // Form Validation
-function validateForm(formId) {
-    const form = document.getElementById(formId);
-    if (!form) return false;
+function initializeFormValidation() {
+    const forms = document.querySelectorAll('form');
     
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!validateForm(form)) {
+                e.preventDefault();
+            }
+        });
+    });
+}
+
+function validateForm(form) {
     const inputs = form.querySelectorAll('[required]');
     let isValid = true;
     
@@ -157,6 +309,9 @@ function showError(input, message) {
     const errorElement = document.createElement('div');
     errorElement.className = 'form-error';
     errorElement.textContent = message;
+    errorElement.style.color = '#ef4444';
+    errorElement.style.fontSize = '14px';
+    errorElement.style.marginTop = '5px';
     
     // Remove any existing error for this input
     const existingError = input.parentNode.querySelector('.form-error');
@@ -191,7 +346,24 @@ function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Number formatting
+// Smooth Scrolling for Anchor Links
+document.addEventListener('click', function(e) {
+    if (e.target.matches('a[href^="#"]')) {
+        e.preventDefault();
+        
+        const targetId = e.target.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }
+});
+
+// Utility Functions
 function formatNumber(num) {
     return new Intl.NumberFormat('en-US').format(num);
 }
@@ -199,51 +371,10 @@ function formatNumber(num) {
 function formatCurrency(num) {
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
     }).format(num);
-}
-
-// Animation on scroll
-function observeElements() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in-up');
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    // Observe feature cards, service cards, etc.
-    document.querySelectorAll('.feature-card, .service-card, .hero-card').forEach(el => {
-        observer.observe(el);
-    });
-}
-
-// Initialize animations when DOM is loaded
-document.addEventListener('DOMContentLoaded', observeElements);
-
-// Mortgage Calculator Functions
-function calculateMortgage(principal, annualRate, years) {
-    const monthlyRate = annualRate / 100 / 12;
-    const numberOfPayments = years * 12;
-    
-    if (monthlyRate === 0) {
-        return principal / numberOfPayments;
-    }
-    
-    const monthlyPayment = principal * 
-        (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-        (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-    
-    return monthlyPayment;
-}
-
-function calculateTotalInterest(monthlyPayment, years, principal) {
-    const totalPayments = monthlyPayment * years * 12;
-    return totalPayments - principal;
 }
 
 // Toast notification function
@@ -266,9 +397,10 @@ function showToast(message, type = 'info') {
                 position: fixed;
                 top: 100px;
                 right: 20px;
-                background: white;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                background: var(--bg-primary);
+                border-radius: 12px;
+                box-shadow: var(--shadow-lg);
+                border: 1px solid var(--border-color);
                 z-index: 1100;
                 min-width: 300px;
                 transform: translateX(100%);
@@ -287,7 +419,7 @@ function showToast(message, type = 'info') {
             }
             
             .toast-success {
-                border-left: 4px solid #10b981;
+                border-left: 4px solid var(--accent-green);
             }
             
             .toast-error {
@@ -303,12 +435,12 @@ function showToast(message, type = 'info') {
                 border: none;
                 font-size: 18px;
                 cursor: pointer;
-                color: #64748b;
+                color: var(--text-secondary);
                 margin-left: 10px;
+                transition: color 0.15s ease;
             }
             
-            [data-theme="dark"] .toast {
-                background: var(--bg-secondary);
+            .toast-close:hover {
                 color: var(--text-primary);
             }
         `;
@@ -341,7 +473,7 @@ function removeToast(toast) {
     }, 300);
 }
 
-// Utility function for debouncing
+// Debounce function
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -375,89 +507,88 @@ function getFromLocalStorage(key, defaultValue = null) {
     }
 }
 
-// Initialize any page-specific functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Page-specific initialization
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+// Page transition effects
+function initializePageTransitions() {
+    // Add page transition effects for internal links
+    const internalLinks = document.querySelectorAll('a[href^="./"], a[href^="/"], a[href^="index.html"], a[href^="pages/"]');
     
-    switch (currentPage) {
-        case 'calculator.html':
-            initializeCalculator();
-            break;
-        case 'contact.html':
-            initializeContactForm();
-            break;
-        case 'career.html':
-            initializeCareerForm();
-            break;
-    }
+    internalLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Skip if it's an anchor link or external link
+            if (href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel')) {
+                return;
+            }
+            
+            e.preventDefault();
+            
+            // Add fade out effect
+            document.body.style.opacity = '0.8';
+            document.body.style.transition = 'opacity 0.3s ease';
+            
+            // Navigate after animation
+            setTimeout(() => {
+                window.location.href = href;
+            }, 300);
+        });
+    });
+}
+
+// Initialize page transitions
+document.addEventListener('DOMContentLoaded', function() {
+    initializePageTransitions();
 });
 
-// Initialize calculator page
-function initializeCalculator() {
-    const form = document.getElementById('calculator-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            calculateAndDisplayResults();
-        });
-        
-        // Add real-time calculation
-        const inputs = form.querySelectorAll('input');
-        inputs.forEach(input => {
-            input.addEventListener('input', debounce(calculateAndDisplayResults, 500));
-        });
-    }
-}
-
-function calculateAndDisplayResults() {
-    const loanAmount = parseFloat(document.getElementById('loan-amount')?.value) || 0;
-    const interestRate = parseFloat(document.getElementById('interest-rate')?.value) || 0;
-    const loanTerm = parseFloat(document.getElementById('loan-term')?.value) || 0;
+// Performance optimization
+function optimizeImages() {
+    const images = document.querySelectorAll('img');
     
-    if (loanAmount > 0 && interestRate > 0 && loanTerm > 0) {
-        const monthlyPayment = calculateMortgage(loanAmount, interestRate, loanTerm);
-        const totalInterest = calculateTotalInterest(monthlyPayment, loanTerm, loanAmount);
-        const totalPayment = loanAmount + totalInterest;
+    images.forEach(img => {
+        // Add loading="lazy" for better performance
+        if (!img.hasAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
+        }
         
-        // Update results
-        document.getElementById('monthly-payment').textContent = formatCurrency(monthlyPayment);
-        document.getElementById('total-interest').textContent = formatCurrency(totalInterest);
-        document.getElementById('total-payment').textContent = formatCurrency(totalPayment);
-        
-        // Show results section
-        document.getElementById('results').style.display = 'block';
-    }
+        // Add error handling
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+        });
+    });
 }
 
-// Initialize contact form
-function initializeContactForm() {
-    const form = document.getElementById('contact-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (validateForm('contact-form')) {
-                // Simulate form submission
-                showToast('Thank you for your message! We\'ll get back to you soon.', 'success');
-                form.reset();
+// Initialize image optimization
+document.addEventListener('DOMContentLoaded', optimizeImages);
+
+// Accessibility improvements
+function initializeAccessibility() {
+    // Add keyboard navigation for custom elements
+    const customButtons = document.querySelectorAll('.btn, .fab-main, .theme-toggle');
+    
+    customButtons.forEach(button => {
+        button.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
             }
         });
-    }
+    });
+    
+    // Add focus indicators
+    const focusableElements = document.querySelectorAll('a, button, input, textarea, select');
+    
+    focusableElements.forEach(element => {
+        element.addEventListener('focus', function() {
+            this.style.outline = '2px solid var(--primary-blue)';
+            this.style.outlineOffset = '2px';
+        });
+        
+        element.addEventListener('blur', function() {
+            this.style.outline = '';
+            this.style.outlineOffset = '';
+        });
+    });
 }
 
-// Initialize career form
-function initializeCareerForm() {
-    const form = document.getElementById('career-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (validateForm('career-form')) {
-                // Simulate form submission
-                showToast('Application submitted successfully! We\'ll review your application and contact you soon.', 'success');
-                form.reset();
-            }
-        });
-    }
-}
+// Initialize accessibility features
+document.addEventListener('DOMContentLoaded', initializeAccessibility);
