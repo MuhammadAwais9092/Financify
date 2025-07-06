@@ -18,20 +18,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const loanAmountInput = document.getElementById('loan-amount');
     
     function updateLoanAmount() {
-        const homePrice = parseFloat(homePriceInput.value) || 0;
-        const downPayment = parseFloat(downPaymentInput.value) || 0;
+        const homePrice = parseFloat(homePriceInput.value.replace(/,/g, '')) || 0;
+        const downPayment = parseFloat(downPaymentInput.value.replace(/,/g, '')) || 0;
         const loanAmount = homePrice - downPayment;
-        loanAmountInput.value = Math.max(0, loanAmount);
+        loanAmountInput.value = Math.max(0, loanAmount).toLocaleString('en-US');
         
         // Update down payment percentage
         const percentage = homePrice > 0 ? (downPayment / homePrice) * 100 : 0;
-        document.getElementById('down-payment-percent').textContent = percentage.toFixed(1) + '%';
+        const percentElement = document.getElementById('down-payment-percent');
+        if (percentElement) {
+            percentElement.textContent = percentage.toFixed(1) + '%';
+        }
         
         calculateMortgage();
     }
     
-    homePriceInput.addEventListener('input', updateLoanAmount);
-    downPaymentInput.addEventListener('input', updateLoanAmount);
+    if (homePriceInput && downPaymentInput && loanAmountInput) {
+        homePriceInput.addEventListener('input', updateLoanAmount);
+        downPaymentInput.addEventListener('input', updateLoanAmount);
+    }
     
     // Initial calculation
     updateLoanAmount();
@@ -49,16 +54,16 @@ function initializeCalculator() {
 }
 
 function calculateMortgage() {
-    // Get input values
-    const homePrice = parseFloat(document.getElementById('home-price').value) || 0;
-    const downPayment = parseFloat(document.getElementById('down-payment').value) || 0;
-    const loanAmount = parseFloat(document.getElementById('loan-amount').value) || 0;
-    const interestRate = parseFloat(document.getElementById('interest-rate').value) || 0;
-    const loanTerm = parseInt(document.getElementById('loan-term').value) || 30;
-    const propertyTax = parseFloat(document.getElementById('property-tax').value) || 0;
-    const homeInsurance = parseFloat(document.getElementById('home-insurance').value) || 0;
-    const pmi = parseFloat(document.getElementById('pmi').value) || 0;
-    const hoaFees = parseFloat(document.getElementById('hoa-fees').value) || 0;
+    // Get input values and clean them
+    const homePrice = parseFloat(document.getElementById('home-price')?.value.replace(/,/g, '')) || 0;
+    const downPayment = parseFloat(document.getElementById('down-payment')?.value.replace(/,/g, '')) || 0;
+    const loanAmount = parseFloat(document.getElementById('loan-amount')?.value.replace(/,/g, '')) || 0;
+    const interestRate = parseFloat(document.getElementById('interest-rate')?.value) || 0;
+    const loanTerm = parseInt(document.getElementById('loan-term')?.value) || 30;
+    const propertyTax = parseFloat(document.getElementById('property-tax')?.value.replace(/,/g, '')) || 0;
+    const homeInsurance = parseFloat(document.getElementById('home-insurance')?.value.replace(/,/g, '')) || 0;
+    const pmi = parseFloat(document.getElementById('pmi')?.value.replace(/,/g, '')) || 0;
+    const hoaFees = parseFloat(document.getElementById('hoa-fees')?.value.replace(/,/g, '')) || 0;
     
     if (loanAmount <= 0 || interestRate <= 0) {
         return;
@@ -104,12 +109,22 @@ function calculateMortgage() {
     
     animateValue('total-interest', totalInterest, formatCurrency);
     animateValue('total-payment', totalPayment, formatCurrency);
-    document.getElementById('payoff-date').textContent = payoffDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    document.getElementById('down-payment-display').textContent = downPaymentPercent.toFixed(1) + '%';
+    
+    const payoffElement = document.getElementById('payoff-date');
+    const downPaymentDisplayElement = document.getElementById('down-payment-display');
+    
+    if (payoffElement) {
+        payoffElement.textContent = payoffDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+    if (downPaymentDisplayElement) {
+        downPaymentDisplayElement.textContent = downPaymentPercent.toFixed(1) + '%';
+    }
     
     // Show results with animation
     const resultsSection = document.getElementById('results');
-    resultsSection.classList.add('show');
+    if (resultsSection) {
+        resultsSection.classList.add('show');
+    }
     
     // Update chart
     updatePaymentChart(monthlyPI, monthlyPropertyTax, monthlyInsurance, monthlyPMI, monthlyHOA);
@@ -140,6 +155,8 @@ function calculateMortgage() {
 
 function animateValue(elementId, targetValue, formatter) {
     const element = document.getElementById(elementId);
+    if (!element) return;
+    
     const startValue = 0;
     const duration = 1000; // 1 second
     const startTime = performance.now();
@@ -166,6 +183,8 @@ function animateValue(elementId, targetValue, formatter) {
 
 function updatePaymentChart(pi, tax, insurance, pmi, hoa) {
     const canvas = document.getElementById('payment-chart');
+    if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
     
     // Set canvas size for high DPI displays
@@ -198,7 +217,7 @@ function updatePaymentChart(pi, tax, insurance, pmi, hoa) {
     
     let currentAngle = -Math.PI / 2;
     
-    // Draw segments with hover effect
+    // Draw segments
     data.forEach((item, index) => {
         const sliceAngle = (item.value / total) * 2 * Math.PI;
         
@@ -250,10 +269,10 @@ function initializeAffordabilityCalculator() {
 }
 
 function calculateAffordability() {
-    const annualIncome = parseFloat(document.getElementById('annual-income').value) || 0;
-    const monthlyDebts = parseFloat(document.getElementById('monthly-debts').value) || 0;
-    const availableDownPayment = parseFloat(document.getElementById('available-down-payment').value) || 0;
-    const interestRate = parseFloat(document.getElementById('affordability-rate').value) || 0;
+    const annualIncome = parseFloat(document.getElementById('annual-income')?.value.replace(/,/g, '')) || 0;
+    const monthlyDebts = parseFloat(document.getElementById('monthly-debts')?.value.replace(/,/g, '')) || 0;
+    const availableDownPayment = parseFloat(document.getElementById('available-down-payment')?.value.replace(/,/g, '')) || 0;
+    const interestRate = parseFloat(document.getElementById('affordability-rate')?.value) || 0;
     
     if (annualIncome <= 0 || interestRate <= 0) {
         showToast('Please enter valid income and interest rate', 'error');
@@ -301,12 +320,17 @@ function calculateAffordability() {
     animateValue('max-loan-amount', maxLoanAmount, formatCurrency);
     animateValue('estimated-payment', maxMortgagePayment, formatCurrency);
     
-    document.getElementById('front-end-ratio').textContent = frontEndRatio.toFixed(1) + '%';
-    document.getElementById('back-end-ratio').textContent = backEndRatio.toFixed(1) + '%';
+    const frontEndElement = document.getElementById('front-end-ratio');
+    const backEndElement = document.getElementById('back-end-ratio');
+    
+    if (frontEndElement) frontEndElement.textContent = frontEndRatio.toFixed(1) + '%';
+    if (backEndElement) backEndElement.textContent = backEndRatio.toFixed(1) + '%';
     
     // Show results with animation
     const resultsSection = document.getElementById('affordability-results');
-    resultsSection.classList.add('show');
+    if (resultsSection) {
+        resultsSection.classList.add('show');
+    }
     
     showToast('Affordability calculation completed!', 'success');
 }
@@ -327,8 +351,12 @@ function initializeEmailReport() {
             modal.classList.add('show');
         });
         
-        closeBtn.addEventListener('click', () => modal.classList.remove('show'));
-        cancelBtn.addEventListener('click', () => modal.classList.remove('show'));
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => modal.classList.remove('show'));
+        }
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => modal.classList.remove('show'));
+        }
         
         // Close modal when clicking outside
         modal.addEventListener('click', function(e) {
@@ -337,85 +365,89 @@ function initializeEmailReport() {
             }
         });
         
-        emailForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            sendEmailReport();
-        });
+        if (emailForm) {
+            emailForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                sendEmailReport();
+            });
+        }
     }
 }
 
 function sendEmailReport() {
-    const email = document.getElementById('email-address').value;
-    const name = document.getElementById('recipient-name').value || 'Valued Customer';
+    const emailInput = document.getElementById('email-address');
+    const nameInput = document.getElementById('recipient-name');
+    
+    if (!emailInput || !nameInput) {
+        showToast('Form elements not found', 'error');
+        return;
+    }
+    
+    const email = emailInput.value;
+    const name = nameInput.value || 'Valued Customer';
     
     if (!email || !window.calculationData) {
         showToast('Please enter a valid email address', 'error');
         return;
     }
     
-    // Create Excel file
-    const workbook = XLSX.utils.book_new();
-    
-    // Mortgage Calculation Summary
-    const summaryData = [
-        ['Financify Mortgage Calculation Report'],
-        ['Generated on:', new Date().toLocaleDateString()],
-        ['Prepared for:', name],
-        [''],
-        ['LOAN DETAILS'],
-        ['Home Price:', formatCurrency(window.calculationData.homePrice)],
-        ['Down Payment:', formatCurrency(window.calculationData.downPayment)],
-        ['Down Payment %:', window.calculationData.downPaymentPercent.toFixed(1) + '%'],
-        ['Loan Amount:', formatCurrency(window.calculationData.loanAmount)],
-        ['Interest Rate:', window.calculationData.interestRate + '%'],
-        ['Loan Term:', window.calculationData.loanTerm + ' years'],
-        [''],
-        ['MONTHLY PAYMENT BREAKDOWN'],
-        ['Principal & Interest:', formatCurrency(window.calculationData.monthlyPI)],
-        ['Property Tax:', formatCurrency(window.calculationData.monthlyPropertyTax)],
-        ['Home Insurance:', formatCurrency(window.calculationData.monthlyInsurance)],
-        ['PMI:', formatCurrency(window.calculationData.monthlyPMI)],
-        ['HOA Fees:', formatCurrency(window.calculationData.monthlyHOA)],
-        ['Total Monthly Payment:', formatCurrency(window.calculationData.totalMonthlyPayment)],
-        [''],
-        ['LOAN SUMMARY'],
-        ['Total Interest Paid:', formatCurrency(window.calculationData.totalInterest)],
-        ['Total Amount Paid:', formatCurrency(window.calculationData.totalPayment)],
-        ['Payoff Date:', window.calculationData.payoffDate],
-        [''],
-        ['IMPORTANT NOTES'],
-        ['• This calculation is for estimation purposes only'],
-        ['• Actual rates and terms may vary based on credit and other factors'],
-        ['• Contact Financify for personalized loan options'],
-        ['• Phone: (555) 123-4567'],
-        ['• Email: info@financify.com']
-    ];
-    
-    const worksheet = XLSX.utils.aoa_to_sheet(summaryData);
-    
-    // Style the worksheet
-    const range = XLSX.utils.decode_range(worksheet['!ref']);
-    
-    // Set column widths
-    worksheet['!cols'] = [
-        { width: 25 },
-        { width: 20 }
-    ];
-    
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Mortgage Calculation');
-    
-    // Generate file
-    const fileName = `Financify_Mortgage_Report_${new Date().toISOString().split('T')[0]}.xlsx`;
+    // Check if XLSX library is available
+    if (typeof XLSX === 'undefined') {
+        showToast('Excel library not loaded. Please refresh the page and try again.', 'error');
+        return;
+    }
     
     try {
-        XLSX.writeFile(workbook, fileName);
+        // Create Excel file
+        const workbook = XLSX.utils.book_new();
         
-        // Simulate email sending (in a real application, this would be sent to a backend)
-        setTimeout(() => {
-            showToast(`Report generated and downloaded as ${fileName}`, 'success');
-            document.getElementById('email-modal').classList.remove('show');
-            document.getElementById('email-form').reset();
-        }, 1000);
+        // Mortgage Calculation Summary
+        const summaryData = [
+            ['Financify Mortgage Calculation Report'],
+            ['Generated on:', new Date().toLocaleDateString()],
+            ['Prepared for:', name],
+            [''],
+            ['LOAN DETAILS'],
+            ['Home Price:', formatCurrency(window.calculationData.homePrice)],
+            ['Down Payment:', formatCurrency(window.calculationData.downPayment)],
+            ['Down Payment %:', window.calculationData.downPaymentPercent.toFixed(1) + '%'],
+            ['Loan Amount:', formatCurrency(window.calculationData.loanAmount)],
+            ['Interest Rate:', window.calculationData.interestRate + '%'],
+            ['Loan Term:', window.calculationData.loanTerm + ' years'],
+            [''],
+            ['MONTHLY PAYMENT BREAKDOWN'],
+            ['Principal & Interest:', formatCurrency(window.calculationData.monthlyPI)],
+            ['Property Tax:', formatCurrency(window.calculationData.monthlyPropertyTax)],
+            ['Home Insurance:', formatCurrency(window.calculationData.monthlyInsurance)],
+            ['PMI:', formatCurrency(window.calculationData.monthlyPMI)],
+            ['HOA Fees:', formatCurrency(window.calculationData.monthlyHOA)],
+            ['Total Monthly Payment:', formatCurrency(window.calculationData.totalMonthlyPayment)],
+            [''],
+            ['LOAN SUMMARY'],
+            ['Total Interest Paid:', formatCurrency(window.calculationData.totalInterest)],
+            ['Total Amount Paid:', formatCurrency(window.calculationData.totalPayment)],
+            ['Payoff Date:', window.calculationData.payoffDate],
+            [''],
+            ['IMPORTANT NOTES'],
+            ['• This calculation is for estimation purposes only'],
+            ['• Actual rates and terms may vary based on credit and other factors'],
+            ['• Contact Financify for personalized loan options'],
+            ['• Phone: (555) 123-4567'],
+            ['• Email: info@financify.com']
+        ];
+        
+        const worksheet = XLSX.utils.aoa_to_sheet(summaryData);
+        
+        // Set column widths
+        worksheet['!cols'] = [
+            { width: 25 },
+            { width: 20 }
+        ];
+        
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Mortgage Calculation');
+        
+        // Generate file
+        const fileName = `Financify_Mortgage_Report_${new Date().toISOString().split('T')[0]}.xlsx`;
         
         // Show loading state
         const submitBtn = document.querySelector('#email-form button[type="submit"]');
@@ -423,7 +455,15 @@ function sendEmailReport() {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Generating Report...</span>';
         submitBtn.disabled = true;
         
+        // Generate and download file
         setTimeout(() => {
+            XLSX.writeFile(workbook, fileName);
+            
+            showToast(`Report generated and downloaded as ${fileName}`, 'success');
+            document.getElementById('email-modal').classList.remove('show');
+            document.getElementById('email-form').reset();
+            
+            // Reset button
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         }, 1000);
@@ -431,6 +471,13 @@ function sendEmailReport() {
     } catch (error) {
         showToast('Error generating report. Please try again.', 'error');
         console.error('Error generating Excel file:', error);
+        
+        // Reset button on error
+        const submitBtn = document.querySelector('#email-form button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> <span>Send Report</span>';
+            submitBtn.disabled = false;
+        }
     }
 }
 
@@ -440,9 +487,10 @@ function initializeFormInteractions() {
     
     numberInputs.forEach(input => {
         input.addEventListener('blur', function() {
-            if (this.value && !isNaN(this.value)) {
-                const value = parseFloat(this.value);
-                if (this.id.includes('price') || this.id.includes('payment') || this.id.includes('amount') || this.id.includes('tax') || this.id.includes('insurance') || this.id.includes('income')) {
+            if (this.value && !isNaN(this.value.replace(/,/g, ''))) {
+                const value = parseFloat(this.value.replace(/,/g, ''));
+                if (this.id.includes('price') || this.id.includes('payment') || this.id.includes('amount') || 
+                    this.id.includes('tax') || this.id.includes('insurance') || this.id.includes('income')) {
                     // Format large numbers with commas
                     this.value = Math.round(value).toLocaleString('en-US');
                 }
@@ -467,13 +515,15 @@ function initializeFormInteractions() {
             
             requiredFields.forEach(fieldId => {
                 const field = document.getElementById(fieldId);
-                const value = parseFloat(field.value.replace(/,/g, '')) || 0;
-                
-                if (value <= 0) {
-                    field.classList.add('error');
-                    isValid = false;
-                } else {
-                    field.classList.remove('error');
+                if (field) {
+                    const value = parseFloat(field.value.replace(/,/g, '')) || 0;
+                    
+                    if (value <= 0) {
+                        field.classList.add('error');
+                        isValid = false;
+                    } else {
+                        field.classList.remove('error');
+                    }
                 }
             });
             
